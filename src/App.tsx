@@ -1,26 +1,87 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { FC, useState, useEffect, Suspense, createContext, useMemo } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import Container from '@mui/material/Container';
+import { LightTheme, DarkTheme } from './styles/themes';
+import './styles/fonts';
 
-function App() {
+import { useLocalStorage } from './hooks/useLocalStorage';
+import { HomePage } from "./pages/HomePage";
+import { UserPage } from "./pages/UserPage";
+import { Page404 } from './pages/Page404';
+import { Header } from './components/Header';
+import { Footer } from './components/Footer';
+import { Spinner } from './components/Spinner';
+
+export const ColorModeContext = createContext({ toggleColorMode: () => {} });
+
+const App: FC = () => {
+  const [themeSetting, setThemeSetting] = useLocalStorage<'light' | 'dark' | undefined>('theme', undefined);
+  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+  const [mode, setMode] = useState<'light' | 'dark'>(prefersDarkMode ? 'dark' : 'light');
+
+  useEffect(() => {
+    themeSetting ? setMode(themeSetting) : setThemeSetting(mode);
+  }, []);
+
+  const colorMode = useMemo(
+    () => ({
+      toggleColorMode: () => {
+        setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
+      },
+    }), 
+    [],
+  );
+
+  useEffect(() => {
+    setThemeSetting(mode);
+  }, [mode]);
+
+  const customColors = mode === 'light' ? LightTheme : DarkTheme;
+  const theme = useMemo(
+    () =>
+      createTheme({
+        palette: {
+          mode,
+          ...customColors
+        },
+        typography: {
+          button: {
+            fontSize: '50px',
+            textTransform: 'none'
+          }
+        },
+      }),
+    [mode],
+  );
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ColorModeContext.Provider value={colorMode}>
+    <ThemeProvider theme={theme}>
+      <Router>
+          <div>
+            <Header />
+            <main className="main">
+                <Container sx={{mt: 6}}>
+                  <Suspense fallback={<Spinner />}>
+                    <Routes>
+                        <Route path='/' element={<HomePage />} />
+                        <Route path='/user/'>
+                          <Route index element={<UserPage />} />
+                          <Route path=':id' element={<UserPage />} />
+                        </Route>
+                        <Route path='*' element={<Page404 />} />
+                    </Routes>
+                  </Suspense>
+                </Container>
+            </main>
+            <Footer />
+          </div>
+        </Router>
+      </ThemeProvider>
+      </ColorModeContext.Provider>
+
   );
 }
-
 export default App;
