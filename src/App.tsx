@@ -4,8 +4,6 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Container from '@mui/material/Container';
 import { LightTheme, DarkTheme } from './styles/themes';
-import './styles/fonts';
-
 import { useLocalStorage } from './hooks/useLocalStorage';
 import { HomePage } from "./pages/HomePage";
 import { UserPage } from "./pages/UserPage";
@@ -13,6 +11,7 @@ import { Page404 } from './pages/Page404';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
 import { Spinner } from './components/Spinner';
+import './styles/fonts';
 
 export const ColorModeContext = createContext({ toggleColorMode: () => {} });
 

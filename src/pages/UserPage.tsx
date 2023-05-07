@@ -9,8 +9,14 @@ import { useLocalStorage } from '../hooks/useLocalStorage';
 import MoreTimeOutlinedIcon from '@mui/icons-material/MoreTimeOutlined';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
+import Stack from '@mui/material/Stack';
+
 import { useLazyGetUserInfoQuery } from "../api/apiSlice";
-import { Spinner } from "../components/Spinner";
+import { ProgressBar } from "../components/ProgressBar";
+import { Error } from "../components/Error";
+import { Record, RecordsList } from "../api/apiSlice";
 
 const ChartContainer = styled(Paper)(({ theme }) => ({
     padding: theme.spacing(5),
@@ -20,19 +26,13 @@ const ChartContainer = styled(Paper)(({ theme }) => ({
 }));
 
 export const UserPage: FC = () => {
-    // временные значения для нормального рендеринга
-    const isLoading = false;
-    const isFetching = false;
-    const [isSuccess, setIsSuccess] = useState(false);
-
-    // обработка запроса на сервер
-    // const [getUserInfo,
-    //     { data: user,
-    //         isLoading,
-    //         isFetching,
-    //         isSuccess,
-    //         isError
-    //     }] = useLazyGetUserInfoQuery();
+    const [getUserInfo,
+        { data: recordsList,
+            isLoading,
+            isFetching,
+            isSuccess,
+            isError
+        }] = useLazyGetUserInfoQuery();
 
     const params = useParams();
     const userId: string | undefined = params.id;
@@ -40,14 +40,10 @@ export const UserPage: FC = () => {
 
     useEffect(() => {
         if (userId) {
-            // временные значения
-            setIsSuccess(true);
-            setUID(userId);
-
-            // getUserInfo(userId); // запрос на сервер по id из параметров url, например `https://example.ru/api/users/${userId}`
-            // if (isSuccess) {
-            //     setUID(userId);
-            // }
+            getUserInfo(userId);
+            if (isSuccess) {
+                setUID(userId);
+            }
         }
     }, [userId]);
 
@@ -78,10 +74,19 @@ export const UserPage: FC = () => {
                 padding: '20px',
             }}>
                 {isLoading || isFetching ?
-                    <Spinner />
-                    : isSuccess ?
-                        <Box sx={{ flexGrow: 1 }}>
-                            <Grid container spacing={2}>
+                    <ProgressBar />
+                    : isError ?
+                        <Error />
+                        : isSuccess && !recordsList ?
+                            <Stack sx={{ width: '100%' }}>
+                                <Alert severity="info" sx={{ borderRadius: 3 }}>
+                                    <AlertTitle>Пока что у вас нет записанных дел</AlertTitle>
+                                    Запустите бота, чтобы начать отслеживать свою статистику
+                                </Alert>
+                            </Stack>
+                            : isSuccess && recordsList && recordsList.length > 0 ?
+                                <Box sx={{ flexGrow: 1 }}>
+                                    <Grid container spacing={2}>
                                 <Grid item xs={12}>
                                     <ChartContainer elevation={2}>
                                         график
@@ -99,30 +104,30 @@ export const UserPage: FC = () => {
                                     </ChartContainer>
                                 </Grid>
                             </Grid>
-                        </Box>
-                        :
-                        <Box sx={{ textAlign: 'center', width: 1 }}>
-                            <Typography variant="h5" component="h2" sx={{ mb: 4 }}>
-                                Запустите бота, чтобы посмотреть свою статистику
-                            </Typography>
-                            <Button
-                                href="#"
-                                variant="contained"
-                                color="primary"
-                                disabled={false}
-                                size="large"
-                                sx={{
-                                    textTransform: 'none',
-                                    mr: 5,
-                                    fontSize: 18,
-                                    borderRadius: 3,
-                                }}>
-                                Запустить бота
-                                <MoreTimeOutlinedIcon sx={{
-                                    ml: 2
-                                }} />
-                            </Button>
-                        </Box>
+                                </Box>
+                                :
+                                <Box sx={{ textAlign: 'center', width: 1 }}>
+                                    <Typography variant="h5" component="h2" sx={{ mb: 4 }}>
+                                        Запустите бота, чтобы посмотреть свою статистику
+                                    </Typography>
+                                    <Button
+                                        href="#"
+                                        variant="contained"
+                                        color="primary"
+                                        disabled={false}
+                                        size="large"
+                                        sx={{
+                                            textTransform: 'none',
+                                            mr: 5,
+                                            fontSize: 18,
+                                            borderRadius: 3,
+                                        }}>
+                                        Запустить бота
+                                        <MoreTimeOutlinedIcon sx={{
+                                            ml: 2
+                                        }} />
+                                    </Button>
+                                </Box>
                 }
             </Paper>
         </Box>
