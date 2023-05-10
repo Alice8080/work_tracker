@@ -75,7 +75,7 @@ export const Sidebar: FC = () => {
           edge="start"
           color="inherit"
           aria-label="menu"
-          sx={{ mr: 2 }}
+          sx={{ mr: 2, color: 'secondary.contrastText' }}
         >
           <MenuIcon />
         </IconButton>

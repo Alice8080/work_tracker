@@ -12,6 +12,7 @@ import { useTheme } from '@mui/material/styles';
 
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { Divider } from "@mui/material";
+import { Block } from "../components/Block";
 
 export const HomePage: FC = () => {
     const theme = useTheme();
@@ -32,7 +33,7 @@ export const HomePage: FC = () => {
                     borderRadius: 3,
                 },
             }}>
-            <Paper elevation={3} >
+            <Block>
                 <Typography variant="h4" component="h1">
                     Трекер работы
                     <InsightsIcon fontSize='large' sx={{ ml: 2 }} />
@@ -41,8 +42,9 @@ export const HomePage: FC = () => {
                 <Typography variant="h5" component="h2" sx={{ color: 'text.secondary' }}>
                     Тут какое-то краткое описание
                 </Typography>
-            </Paper>
-            <Paper elevation={2} sx={{
+            </Block>
+            <Block
+                sx={{
                 display: 'flex',
                 flexWrap: 'wrap',
                 margin: 'auto',
@@ -86,7 +88,7 @@ export const HomePage: FC = () => {
                         ml: 2
                     }} />
                 </Button>
-            </Paper>
+            </Block>
         </Box>
     );
 

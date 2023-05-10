@@ -1,9 +1,8 @@
 import { FC, useState, useEffect, Suspense, createContext, useMemo } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Container from '@mui/material/Container';
-import { LightTheme, DarkTheme } from './styles/themes';
+import { ThemeProvider, createTheme, useTheme, Shadows, responsiveFontSizes } from '@mui/material/styles';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import { HomePage } from "./pages/HomePage";
 import { UserPage } from "./pages/UserPage";
@@ -11,6 +10,7 @@ import { Page404 } from './pages/Page404';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
 import { Spinner } from './components/Spinner';
+import { LightTheme, DarkTheme } from './styles/themes';
 import './styles/fonts';
 
 export const ColorModeContext = createContext({ toggleColorMode: () => {} });
@@ -19,6 +19,7 @@ const App: FC = () => {
   const [themeSetting, setThemeSetting] = useLocalStorage<'light' | 'dark' | undefined>('theme', undefined);
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   const [mode, setMode] = useState<'light' | 'dark'>(prefersDarkMode ? 'dark' : 'light');
+  const Theme = useTheme();
 
   useEffect(() => {
     themeSetting ? setMode(themeSetting) : setThemeSetting(mode);
@@ -38,7 +39,7 @@ const App: FC = () => {
   }, [mode]);
 
   const customColors = mode === 'light' ? LightTheme : DarkTheme;
-  const theme = useMemo(
+  let theme = useMemo(
     () =>
       createTheme({
         palette: {
@@ -47,22 +48,21 @@ const App: FC = () => {
         },
         typography: {
           button: {
-            fontSize: '50px',
             textTransform: 'none'
           }
         },
+        shadows: Theme.shadows.map(() => "none") as Shadows
       }),
     [mode],
   );
+  theme = responsiveFontSizes(theme);
 
   return (
     <ColorModeContext.Provider value={colorMode}>
     <ThemeProvider theme={theme}>
       <Router>
-          <div>
             <Header />
-            <main className="main">
-                <Container sx={{mt: 6}}>
+                <Container maxWidth="xl" sx={{mt: 6}}>
                   <Suspense fallback={<Spinner />}>
                     <Routes>
                         <Route path='/' element={<HomePage />} />
@@ -74,9 +74,7 @@ const App: FC = () => {
                     </Routes>
                   </Suspense>
                 </Container>
-            </main>
             <Footer />
-          </div>
         </Router>
       </ThemeProvider>
       </ColorModeContext.Provider>

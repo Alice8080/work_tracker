@@ -18,15 +18,15 @@ export const Header: FC = () => {
 
     return (
         <Box sx={{ flexGrow: 1 }}>
-            <AppBar position="static" color="primary">
+            <AppBar elevation={0} position="static" variant={theme.palette.mode === 'light' ? "outlined" : 'elevation'} sx={{backgroundColor: 'secondary.main'}}>
                 <Toolbar>
-                    <Sidebar />                    
-                    <TimelineSharpIcon sx={{mr: '15px', ml: '5px'}} fontSize='large' />
+                    <Sidebar />
+                    <TimelineSharpIcon sx={{mr: '15px', ml: '5px', color: 'secondary.contrastText'}} fontSize='large' />
                     <Typography component="div" sx={{ flexGrow: 1 }}>
-                        <Link href='/' variant="h6" color="grey.50" underline="none">Трекер работы</Link>
+                        <Link href='/' variant="h6" color="secondary.contrastText" underline="none">Трекер работы</Link>
                     </Typography>
-                    <IconButton sx={{ ml: 1 }} onClick={colorMode.toggleColorMode} color="inherit">
-                        {theme.palette.mode === 'dark' ? <BrightnessMediumSharpIcon /> : <Brightness2SharpIcon />}
+                    <IconButton sx={{ ml: 1 }} onClick={colorMode.toggleColorMode}>
+                        {theme.palette.mode === 'dark' ? <BrightnessMediumSharpIcon sx={{color: 'secondary.contrastText'}} /> : <Brightness2SharpIcon sx={{color: 'secondary.contrastText'}} />}
                     </IconButton>
                 </Toolbar>
             </AppBar>
