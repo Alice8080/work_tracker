@@ -65,11 +65,11 @@ const App: FC = () => {
           <Suspense fallback={<Spinner />}>
             <Routes>
               <Route path='/' element={<HomePage />} />
-              <Route path='/#/user/'>
+              <Route path='/user/'>
                 <Route index element={<UserPage />} />
                 <Route path=':id' element={<UserPage />} />
               </Route>
-              <Route path='/#/*' element={<Page404 />} />
+              <Route path='*' element={<Page404 />} />
             </Routes>
           </Suspense>
         </Container>

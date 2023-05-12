@@ -60,7 +60,7 @@ export const HomePage: FC = () => {
                     }} />
                 </Button>
                 <Button
-                    href={uId ? `/user/${uId}` : '/user'}
+                    href={uId ? `/work_tracker/#/user/${uId}` : '/work_tracker/#/user'}
                     variant="contained"
                     color="primary"
                     disabled={false}

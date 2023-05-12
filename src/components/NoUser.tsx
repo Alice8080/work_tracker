@@ -11,7 +11,7 @@ export const NoUser: FC = () => {
                 Запустите бота, чтобы посмотреть свою статистику
             </Typography>
             <Button
-                href="#"
+                href="https://t.me/Treker_Raboty_Bot"
                 variant="contained"
                 color="primary"
                 disabled={false}

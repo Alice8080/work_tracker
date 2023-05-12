@@ -51,7 +51,7 @@ export const UserPage: FC = () => {
                 setUID(userId);
             }
         }
-    }, [userId]);
+    }, [userId, isSuccess]);
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
         setParams((params: Params) => ({ ...params, recordName: event.target.value as string | undefined }))
