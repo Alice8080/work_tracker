@@ -13,7 +13,7 @@ import { Spinner } from './components/Spinner';
 import { LightTheme, DarkTheme } from './styles/themes';
 import './styles/fonts';
 
-export const ColorModeContext = createContext({ toggleColorMode: () => {} });
+export const ColorModeContext = createContext({ toggleColorMode: () => { } });
 
 const App: FC = () => {
   const [themeSetting, setThemeSetting] = useLocalStorage<'light' | 'dark' | undefined>('theme', undefined);
@@ -30,7 +30,7 @@ const App: FC = () => {
       toggleColorMode: () => {
         setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
       },
-    }), 
+    }),
     [],
   );
 
@@ -59,25 +59,23 @@ const App: FC = () => {
 
   return (
     <ColorModeContext.Provider value={colorMode}>
-    <ThemeProvider theme={theme}>
-      <Router>
-            <Header />
-                <Container maxWidth="xl" sx={{mt: 4}}>
-                  <Suspense fallback={<Spinner />}>
-                    <Routes>
-                        <Route path='/' element={<HomePage />} />
-                        <Route path='/user/'>
-                          <Route index element={<UserPage />} />
-                          <Route path=':id' element={<UserPage />} />
-                        </Route>
-                        <Route path='*' element={<Page404 />} />
-                    </Routes>
-                  </Suspense>
-                </Container>
-            <Footer />
-        </Router>
+      <ThemeProvider theme={theme}>
+        <Header />
+        <Container maxWidth="xl" sx={{ mt: 4 }}>
+          <Suspense fallback={<Spinner />}>
+            <Routes>
+              <Route path='/' element={<HomePage />} />
+              <Route path='/user/'>
+                <Route index element={<UserPage />} />
+                <Route path=':id' element={<UserPage />} />
+              </Route>
+              <Route path='*' element={<Page404 />} />
+            </Routes>
+          </Suspense>
+        </Container>
+        <Footer />
       </ThemeProvider>
-      </ColorModeContext.Provider>
+    </ColorModeContext.Provider>
 
   );
 }
