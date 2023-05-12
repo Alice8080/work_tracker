@@ -1,6 +1,7 @@
 {
   "name": "work_tracker",
   "version": "0.1.0",
+  "homepage": "https://Alice8080.github.io/work_tracker",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.10.8",
@@ -31,6 +32,8 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "app -d build",    
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -53,5 +56,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "gh-pages": "^5.0.0"
   }
 }
