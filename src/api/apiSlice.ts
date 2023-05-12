@@ -23,7 +23,7 @@ export const apiSlice = createApi({
                 let records: RecordsList = [];
                 if (result.length !== 0) {
                     for (let item of result) {
-                        if (item[0]) {
+                        if (Date.parse(item[0]) && Date.parse(item[1]) && item[1]) {
                             let record: Record = {
                                 fromDate: item[0],
                                 toDate: item[1],

@@ -1,46 +1,33 @@
-import { FC, useState, useEffect } from "react";
+import { FC, useState, useEffect, ChangeEvent } from "react";
 import { useParams } from "react-router-dom";
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
-import BarChartRoundedIcon from '@mui/icons-material/BarChartRounded';
 import Grid from '@mui/material/Grid';
-import { styled } from '@mui/material/styles';
 import { useLocalStorage } from '../hooks/useLocalStorage';
-import MoreTimeOutlinedIcon from '@mui/icons-material/MoreTimeOutlined';
-import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import Alert from '@mui/material/Alert';
-import AlertTitle from '@mui/material/AlertTitle';
-import Stack from '@mui/material/Stack';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
-import ManageSearchIcon from '@mui/icons-material/ManageSearch';
-import SearchIcon from '@mui/icons-material/Search';
-import IconButton from '@mui/material/IconButton';
 import { FormHelperText } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import AutoGraphIcon from '@mui/icons-material/AutoGraph';
 import EmojiEventsRoundedIcon from '@mui/icons-material/EmojiEventsRounded';
-import { Divider } from "@mui/material";
 import EventAvailableRoundedIcon from '@mui/icons-material/EventAvailableRounded';
+import AccessTimeRoundedIcon from '@mui/icons-material/AccessTimeRounded';
 
 import { useLazyGetUserInfoQuery } from "../api/apiSlice";
 import { ProgressBar } from "../components/ProgressBar";
 import { Error } from "../components/Error";
-import { Record, RecordsList } from "../api/apiSlice";
 import BarChart from "../components/BarChart";
 import { Block } from "../components/Block";
-
-const ChartContainer = styled(Paper)(({ theme }) => ({
-    padding: theme.spacing(5),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-    borderRadius: 6,
-}));
+import { Params } from "../hooks/useRecords";
+import { useRecords } from "../hooks/useRecords";
+import { NoRecords } from "../components/NoRecords";
+import { Achievement } from "../components/Achievement";
+import { NoUser } from "../components/NoUser";
 
 export const UserPage: FC = () => {
     const [getUserInfo,
@@ -50,29 +37,53 @@ export const UserPage: FC = () => {
             isSuccess,
             isError
         }] = useLazyGetUserInfoQuery();
-
-    const params = useParams();
-    const userId: string | undefined = params.id;
-    const [uId, setUID] = useLocalStorage<string | undefined>('uid', undefined);
-
     const theme = useTheme();
     const matches = useMediaQuery(theme.breakpoints.down('sm'));
+    const { formData, getBestResults } = useRecords(recordsList);
+    const urlParams = useParams();
+    const userId: string | undefined = urlParams.id;
+    const [uId, setUID] = useLocalStorage<string | undefined>('uid', undefined);
+    const [params, setParams] = useState<Params>({ time: matches ? 'week' : 'all', recordName: '' });
+    const [statistics, setStatistics] = useState(getBestResults());
+    const [chartData, setChartData] = useState(formData(params));
 
     useEffect(() => {
         if (userId) {
             getUserInfo(userId);
             if (isSuccess) {
+                setStatistics(getBestResults());
                 setUID(userId);
             }
         }
     }, [userId]);
 
-    const [time, setTime] = useState('all');
-    const handleChange = (event: SelectChangeEvent) => {
-        setTime(event.target.value as string);
+    useEffect(() => {
+        if (isSuccess) {
+            setChartData(formData(params));
+        }
+    }, [isSuccess, recordsList, params]);
+
+    useEffect(() => {
+        if (isSuccess) {
+            setStatistics(getBestResults());
+        }
+    }, [isSuccess, recordsList]);
+
+    const handleTimeChange = (event: SelectChangeEvent) => {
+        setParams((params: Params) => ({ ...params, time: event.target.value as 'all' | 'month' | 'week' }))
+    };
+    const handleRecordChange = (event: ChangeEvent<HTMLInputElement>) => {
+        setParams((params: Params) => ({ ...params, recordName: event.target.value as string | undefined }))
     };
 
-  
+    const { labels, data, allHours } = chartData;
+    const { firstDate, lastDate, weekHours, bestDay, bestMonth } = statistics;
+
+    const timeItems = [
+        ['week', 'Последняя неделя'],
+        ['month', 'Последний месяц'],
+        ['all', 'Все время'],
+    ];
 
     return (
         <Box
@@ -85,9 +96,9 @@ export const UserPage: FC = () => {
                 borderRadius: 3,
                 width: 1,
             }}>
-                <Typography variant="h4" component="h1">
+                <Typography variant={matches ? 'h5' : 'h4'} component="h1">
                     Статистика активности
-                    <AutoGraphIcon fontSize='large' sx={{ ml: 2, mb: -1 }} />
+                    <AutoGraphIcon fontSize={matches ? 'medium' : 'large'} sx={{ ml: 2, mb: -1 }} />
                 </Typography>
             </Block>
             <Paper sx={{
@@ -97,7 +108,7 @@ export const UserPage: FC = () => {
                 width: 1,
                 borderRadius: 3,
                 mt: 2,
-                padding: matches ? '5px' : '20px',
+                padding: matches ? '8px' : '20px',
                 border: matches ? 0 : 1,
                 borderColor: 'secondary.dark',
                 mb: 4
@@ -107,87 +118,70 @@ export const UserPage: FC = () => {
                     : isError ?
                         <Error />
                         : isSuccess && !recordsList ?
-                            <Stack sx={{ width: '100%' }}>
-                                <Alert severity="info" sx={{ borderRadius: 3 }}>
-                                    <AlertTitle>Пока что у вас нет записанных дел</AlertTitle>
-                                    Запустите бота, чтобы начать отслеживать свою статистику
-                                </Alert>
-                            </Stack>
+                            <NoRecords />
                             : isSuccess && recordsList && recordsList.length > 0 ?
-                            <Box sx={{ flexGrow: 1 }}>
-                                <Grid container spacing={{ xs: 2 }} >
-                                    <Grid item xs={12} lg={9} sx={{ w: 1, h: 1 }}>
-                                        <Block
-                                            sx={{ width: 1, height: 1, padding: matches ? '5px' : '20px', }}>
-                                            <BarChart recordsList={recordsList} />
-                                        </Block>
-                                    </Grid>
-
-                                    <Grid item xs={12} lg={3}>
-                                        <Grid container spacing={{ xs: 2 }}>
-                                            <Grid item xs={12}>
-                                                <Block sx={{ textAlign: 'center' }}>
-                                                    <FormControl fullWidth sx={{
-                                                        mb: 2
-                                                    }}>
-                                                        <InputLabel id="demo-simple-select-label">Выберите период</InputLabel>
-                                                        <Select
-                                                            sx={{ fontSize: '14px', mb: 2 }}
-                                                            value={time}
-                                                            onChange={handleChange}
-                                                            label='Выберите период ;;;;'
-                                                            inputProps={{ 'aria-label': 'Without label' }}>
-                                                            <MenuItem value="all">Все время</MenuItem>
-                                                            <MenuItem value='month'>Последний месяц</MenuItem>
-                                                            <MenuItem value='week'>Последняя неделя</MenuItem>
-                                                        </Select>
-                                                        <TextField
-                                                            label="Введите название дела"
-                                                            defaultValue=""
-                                                            sx={{ mb: 1 }}
-                                                        />
-                                                        <FormHelperText>По умолчанию на графике отображается общее время всех дел в часах</FormHelperText>
-                                                    </FormControl>
-                                                    <Button
-                                                        href="#"
-                                                        variant="outlined"
-                                                        disabled={false}
-                                                        size="large"
-                                                        sx={{ ml: 'auto' }}>
-                                                        Найти
-                                                        <SearchIcon sx={{
-                                                            ml: 2
-                                                        }} />
-                                                    </Button>
-                                                </Block>
+                                <Box sx={{ flexGrow: 1 }}>
+                                    <Grid container spacing={{ xs: 2 }} >
+                                        <Grid item xs={12} lg={9} sx={{ w: 1, h: 1 }}>
+                                            <Block
+                                                sx={{ width: 1, height: 1, padding: matches ? '8px' : '20px', }}>
+                                                <BarChart recordsList={recordsList} labels={labels} data={data} name={params.recordName} />
+                                            </Block>
+                                        </Grid>
+                                        <Grid item xs={12} lg={3}>
+                                            <Grid container spacing={{ xs: 2 }}>
+                                                <Grid item xs={12}>
+                                                    <Block sx={{ textAlign: 'center' }}>
+                                                        <FormControl fullWidth >
+                                                            <InputLabel id="demo-simple-select-label">Выберите период</InputLabel>
+                                                            <Select
+                                                                sx={{ fontSize: '14px', mb: 2 }}
+                                                                value={params.time}
+                                                                onChange={handleTimeChange}
+                                                                label='Выберите период ;;;;'
+                                                                inputProps={{ 'aria-label': 'Without label' }}>
+                                                                {(matches ? timeItems : timeItems.reverse()).map((item, i) => <MenuItem key={i} value={item[0]}>{item[1]}</MenuItem>)}
+                                                            </Select>
+                                                            <TextField
+                                                                label="Введите название дела"
+                                                                defaultValue=""
+                                                                onChange={handleRecordChange}
+                                                                sx={{ mb: 2 }}
+                                                            />
+                                                            <FormHelperText sx={{ mb: 1 }}>По умолчанию на графике отображается общее время всех дел в часах</FormHelperText>
+                                                            <FormHelperText>Если график пуст, то по выбранному делу или в выбранный период нет записей</FormHelperText>
+                                                        </FormControl>
+                                                    </Block>
+                                                </Grid>
+                                                <Grid item xs={12}>
+                                                    <Achievement 
+                                                        title='Время работы' 
+                                                        subtitle={allHours} 
+                                                        item={<>
+                                                            <Typography color='text.secondary' sx={{ pb: 1 }}>
+                                                                Дата первой записи:
+                                                            </Typography>
+                                                            <Typography color='text.secondary' sx={{ pb: 2 }}>
+                                                                {firstDate}
+                                                            </Typography>
+                                                            </>} 
+                                                        Icon={AccessTimeRoundedIcon} />
+                                                </Grid>
                                             </Grid>
                                         </Grid>
+                                        <Grid item xs={12} lg={4}>
+                                            <Achievement title='Лучший день за все время' subtitle={bestDay.day} item={`Время работы — ${bestDay.hours}`} Icon={EmojiEventsRoundedIcon} />
+                                        </Grid>
+                                        <Grid item xs={12} lg={4}>
+                                            <Achievement title='Лучший день за все время' subtitle={bestMonth.month} item={`За него вы проработали ${bestMonth.hours}`} Icon={EventAvailableRoundedIcon} />
+                                        </Grid>
+                                        <Grid item xs={12} lg={4}>
+                                            <Achievement title='Общее время работы за последнюю неделю' subtitle={weekHours} item={`Последняя запись сделана ${lastDate}`} Icon={EventAvailableRoundedIcon} />
+                                        </Grid>
                                     </Grid>
-                                </Grid>
-                            </Box>
-                    :
-                    <Box sx={{ textAlign: 'center', width: 1 }}>
-                        <Typography variant="h5" component="h2" sx={{ mb: 4 }}>
-                            Запустите бота, чтобы посмотреть свою статистику
-                        </Typography>
-                        <Button
-                            href="#"
-                            variant="contained"
-                            color="primary"
-                            disabled={false}
-                            size="large"
-                            sx={{
-                                textTransform: 'none',
-                                mr: 5,
-                                fontSize: 18,
-                                borderRadius: 3,
-                            }}>
-                            Запустить бота
-                            <MoreTimeOutlinedIcon sx={{
-                                ml: 2
-                            }} />
-                        </Button>
-                    </Box>
+                                </Box>
+                                :
+                                <NoUser />
                 }
             </Paper>
         </Box>

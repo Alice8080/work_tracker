@@ -18,7 +18,7 @@ export const Block: FC<ClickableProps> = (props: ClickableProps) => {
             width: 1,
             height: 'fit-content',
             borderRadius: matches ? 2 : 3,
-            p: matches ? 1.6 : 3,
+            p: 3,
             ...sx
             }} 
             variant={theme.palette.mode === 'light' ? "outlined" : 'elevation'}>

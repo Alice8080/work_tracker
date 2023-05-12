@@ -14,10 +14,13 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 
 import { RecordsList } from '../api/apiSlice';
-import { formData, getNameByDate } from './formData';
+import { useRecords } from '../hooks/useRecords';
 
 interface Props {
     recordsList: RecordsList;
+    labels: string[],
+    data: number[],
+    name: string | undefined
 }
 
 ChartJS.register(
@@ -29,9 +32,11 @@ ChartJS.register(
     Legend
 );
 
-const BarChart = ({ recordsList }: Props) => {
+const BarChart = ({ recordsList, labels, data, name }: Props) => {
+    const {getNameByDate} = useRecords(recordsList);
     const theme = useTheme();
-    const matches = useMediaQuery(theme.breakpoints.up('sm'));
+    const matches = useMediaQuery(theme.breakpoints.down('sm'));
+    let maxStringLength = matches ? 40 : 80; 
 
     const options: ChartOptions<'bar'> = {
         responsive: true,
@@ -40,10 +45,22 @@ const BarChart = ({ recordsList }: Props) => {
                 display: false,
             },
             tooltip: {
+                boxPadding: 0,
                 callbacks: {
                     label: function (context) {
-                        return getNameByDate(recordsList, context.label);
-                    }
+                        const label = getNameByDate(context.label, name).replace(/\n/g, '');
+                        let lines = []; 
+                        let startLine = 0;
+                        let endLine = maxStringLength;
+                        let counter = 1;
+                        while (label.slice(startLine, endLine)) {
+                            lines.push(label.slice(startLine, endLine));
+                            startLine = endLine;
+                            counter += 1;
+                            endLine = maxStringLength*counter;
+                        }
+                        return lines;
+                    },
                 }
             }
         },
@@ -57,8 +74,8 @@ const BarChart = ({ recordsList }: Props) => {
                     color: theme.palette.text.disabled,
                     dash: [2, 4],
                 },
-                ticks: { 
-                    color: theme.palette.text.disabled 
+                ticks: {
+                    color: theme.palette.text.disabled
                 }
             },
             y: {
@@ -69,21 +86,19 @@ const BarChart = ({ recordsList }: Props) => {
                     color: theme.palette.text.disabled,
                     dash: [5, 2],
                 },
-                ticks: { 
-                    display: true, 
-                    color: theme.palette.text.disabled 
+                ticks: {
+                    display: true,
+                    color: theme.palette.text.disabled
                 }
             }
         },
         maintainAspectRatio: true,
     };
 
-    let { labels, data } = formData(recordsList);
-
     const chartData: ChartData<'bar'> = {
         labels,
         datasets: [{
-            label: 'My First Dataset',
+            label: 'Dataset',
             data,
             backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
