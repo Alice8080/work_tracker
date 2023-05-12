@@ -14,8 +14,7 @@ import { Sidebar } from './Sidebar';
 
 export const Header: FC = () => {
     const theme = useTheme();
-    const colorMode = useContext(ColorModeContext);
-
+    const colorMode = useContext(ColorModeContext); 
     return (
         <Box sx={{ flexGrow: 1 }}>
             <AppBar elevation={0} position="static" variant={theme.palette.mode === 'light' ? "outlined" : 'elevation'} sx={{backgroundColor: 'secondary.main'}}>

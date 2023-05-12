@@ -62,7 +62,7 @@ const App: FC = () => {
     <ThemeProvider theme={theme}>
       <Router>
             <Header />
-                <Container maxWidth="xl" sx={{mt: 6}}>
+                <Container maxWidth="xl" sx={{mt: 4}}>
                   <Suspense fallback={<Spinner />}>
                     <Routes>
                         <Route path='/' element={<HomePage />} />

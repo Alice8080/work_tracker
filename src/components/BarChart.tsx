@@ -1,4 +1,3 @@
-import { FC } from 'react';
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -12,15 +11,14 @@ import { Bar } from 'react-chartjs-2';
 import type { ChartData, ChartOptions } from 'chart.js';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
-
 import { RecordsList } from '../api/apiSlice';
 import { useRecords } from '../hooks/useRecords';
 
 interface Props {
     recordsList: RecordsList;
-    labels: string[],
-    data: number[],
-    name: string | undefined
+    labels: string[];
+    data: number[];
+    name: string | undefined;
 }
 
 ChartJS.register(
@@ -32,11 +30,11 @@ ChartJS.register(
     Legend
 );
 
-const BarChart = ({ recordsList, labels, data, name }: Props) => {
+export const BarChart = ({ recordsList, labels, data, name }: Props) => {
     const {getNameByDate} = useRecords(recordsList);
     const theme = useTheme();
     const matches = useMediaQuery(theme.breakpoints.down('sm'));
-    let maxStringLength = matches ? 40 : 80; 
+    let maxStringLength = matches ? 40 : 80;
 
     const options: ChartOptions<'bar'> = {
         responsive: true,
@@ -125,5 +123,3 @@ const BarChart = ({ recordsList, labels, data, name }: Props) => {
         <Bar options={options} data={chartData} />
     );
 }
-
-export default BarChart;

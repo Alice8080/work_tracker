@@ -1,6 +1,5 @@
 import { FC } from "react";
 import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import MoreTimeOutlinedIcon from '@mui/icons-material/MoreTimeOutlined';
 import ForumRoundedIcon from '@mui/icons-material/ForumRounded';
@@ -9,9 +8,7 @@ import InsightsIcon from '@mui/icons-material/Insights';
 import TrendingUpRoundedIcon from '@mui/icons-material/TrendingUpRounded';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
-
 import { useLocalStorage } from '../hooks/useLocalStorage';
-import { Divider } from "@mui/material";
 import { Block } from "../components/Block";
 
 export const HomePage: FC = () => {
@@ -34,13 +31,9 @@ export const HomePage: FC = () => {
                 },
             }}>
             <Block>
-                <Typography variant="h4" component="h1">
+                <Typography variant="h5" component="h1">
                     Трекер работы
-                    <InsightsIcon fontSize='large' sx={{ ml: 2 }} />
-                </Typography>
-                <Divider sx={{ mt: 3, mb: 2 }} />
-                <Typography variant="h5" component="h2" sx={{ color: 'text.secondary' }}>
-                    Тут какое-то краткое описание
+                    <InsightsIcon sx={{ ml: 2, fontSize: '30px', mb: -0.7 }} />
                 </Typography>
             </Block>
             <Block
@@ -52,11 +45,11 @@ export const HomePage: FC = () => {
                 '& > :not(style)': {
                     textTransform: 'none',
                     fontSize: matches ? '17px' : '16px',
-                    borderRadius: 3,
+                    borderRadius: 2,
                 },
             }}>
                 <Button
-                    href="#"
+                    href="https://t.me/Treker_Raboty_Bot"
                     variant="contained"
                     color="primary"
                     disabled={false}
@@ -72,7 +65,7 @@ export const HomePage: FC = () => {
                     color="primary"
                     disabled={false}
                     size="large">
-                    Посмотреть свою статистику
+                    Посмотреть статистику
                     <TrendingUpRoundedIcon sx={{
                         ml: 2
                     }} />

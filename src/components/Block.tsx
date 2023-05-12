@@ -3,13 +3,12 @@ import Paper from '@mui/material/Paper';
 import { useTheme, SxProps, Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
-interface ClickableProps {
+interface Props {
     children: JSX.Element[] | JSX.Element;
     sx?: SxProps<Theme>
 }
 
-export const Block: FC<ClickableProps> = (props: ClickableProps) => {
-    const { children, sx } = props;
+export const Block: FC<Props> = ({ children, sx }: Props) => {
     const theme = useTheme();
     const matches = useMediaQuery(theme.breakpoints.down('sm'));
     return (

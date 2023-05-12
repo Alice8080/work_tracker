@@ -2,9 +2,9 @@ import moment from "moment";
 import { Record, RecordsList } from "../api/apiSlice";
 
 interface ReturnData {
-    labels: string[],
-    data: number[],
-    allHours: string,
+    labels: string[];
+    data: number[];
+    allHours: string;
 }
 
 export interface Params {
@@ -16,37 +16,19 @@ interface statisticalData {
     firstDate: string;
     lastDate: string;
     bestDay: {
-        day: string,
-        hours: string
+        day: string;
+        hours: string;
     },
     bestMonth: {
-        month: string,
-        hours: string
+        month: string;
+        hours: string;
     },
-    weekHours: string
+    weekHours: string;
 }
 
 // хук обработки данных из списка записей о делах
 
 export const useRecords = (recordsList: RecordsList | undefined) => {
-    const formatTime = (hours: number): string => {
-        const hoursForms = ['час', 'часа', 'часов'];
-        const minutesForms = ['минута', 'минуты', 'минут'];
-        function formatCase(value: number, words: string[]) {
-            value = Math.abs(value) % 100;
-            var num = value % 10;
-            if (value > 10 && value < 20) return words[2];
-            if (num > 1 && num < 5) return words[1];
-            if (num === 1) return words[0];
-            return words[2];
-        }
-        const hour = Math.trunc(hours);
-        const minutes = Math.round((hours * 60) % 60);
-        const hoursString = hour ? `${hour} ${formatCase(hour, hoursForms)}` : '';
-        const minutesString = minutes || !hour && !minutes ? `${minutes} ${formatCase(minutes, minutesForms)}` : '';
-        return `${hoursString} ${minutesString}`;
-    }
-
     const formData = (params: Params): ReturnData => { // отображение статистики записей в зависимости от парметров сортировки 
         const { time, recordName }: Params = params;
         let data: ReturnData = {
@@ -88,7 +70,30 @@ export const useRecords = (recordsList: RecordsList | undefined) => {
         }
         return data;
     }
-    
+
+    function formatTime(hours: number): string { // форматирование отображения времени
+        const hoursForms = ['час', 'часа', 'часов'];
+        const minutesForms = ['минута', 'минуты', 'минут'];
+        function formatCase(value: number, words: string[]) {
+            value = Math.abs(value) % 100;
+            const num = value % 10;
+            if (value > 10 && value < 20) return words[2];
+            if (num > 1 && num < 5) return words[1];
+            if (num === 1) return words[0];
+            return words[2];
+        }
+        const hour = Math.trunc(hours);
+        const minutes = Math.round((hours * 60) % 60);
+        const hoursString = hour ? `${hour} ${formatCase(hour, hoursForms)}` : '';
+        const minutesString = minutes || !hour && !minutes ? `${minutes} ${formatCase(minutes, minutesForms)}` : '';
+        return `${hoursString} ${minutesString}`;
+    }
+
+    function formatDate(dateString: string) { // форматирование отображения даты
+        let date: Date = new Date(dateString.length > 10 ? dateString : dateString.replace(/(\d+).(\d+).(\d+)/, '$3/$2/$1'));
+        return date.toLocaleString('ru', { dateStyle: 'long' }).replace('г.', '');
+    }
+
     const getNameByDate = (date: string, name: string | undefined): string => { // отображение названия выбранного дела во всплывающей подсказке на графике
         let recordsNames = new Set<string>();
         if (recordsList) {
@@ -101,11 +106,11 @@ export const useRecords = (recordsList: RecordsList | undefined) => {
                     recordsNames.add(record.name);
                 }
             }
-        }        
+        }
         return Array.from(recordsNames).join(', ');
     }
-    
-    const getBestResults = (): statisticalData => { // получить периоды с наибольшим количеством часов, дату первой и последней записи  
+
+    const getBestResults = (): statisticalData => { // получить периоды с наибольшим количеством часов, сумму часов за последнюю неделю, дату первой и последней записи  
         let info: statisticalData = {
             firstDate: '',
             lastDate: '',
@@ -142,22 +147,19 @@ export const useRecords = (recordsList: RecordsList | undefined) => {
             const maxHours = [...recordsData.entries()].reduce((accumulator, element) => {
                 return element[1] > accumulator[1] ? element : accumulator;
             });
-            info.bestDay.day = maxHours[0];
-            info.bestDay.hours = formatTime(maxHours[1]);
-    
             const maxMonth = [...months.entries()].reduce((accumulator, element) => {
                 return element[1] > accumulator[1] ? element : accumulator;
             });
+            info.bestDay.day = formatDate(maxHours[0]);
+            info.bestDay.hours = formatTime(maxHours[1]);
             info.bestMonth.month = new Date(2023, maxMonth[0], 1).toLocaleString('ru', { month: 'long' });
             info.bestMonth.hours = formatTime(maxMonth[1]);
-            let firstRecord = new Date(Date.parse(recordsList[recordsList.length - 1].fromDate));
-            info.firstDate = firstRecord.toLocaleString().split(',')[0];
-            let lastRecord = new Date(Date.parse(recordsList[0].fromDate));
-            info.lastDate = lastRecord.toLocaleString().split(',')[0];
+            info.firstDate = formatDate(recordsList[recordsList.length - 1].fromDate)
+            info.lastDate = formatDate(recordsList[0].fromDate)
             info.weekHours = formatTime(weekHours);
         }
         return info;
     }
 
-    return {formData, getNameByDate, getBestResults, formatTime};
+    return { formData, getNameByDate, getBestResults, formatTime };
 }
