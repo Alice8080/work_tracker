@@ -10,7 +10,7 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <HashRouter basename='/work_tracker'>
+    <HashRouter>
       <Provider store={store}>
         <App />
       </Provider>

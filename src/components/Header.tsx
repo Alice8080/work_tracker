@@ -22,7 +22,7 @@ export const Header: FC = () => {
                     <Sidebar />
                     <TimelineSharpIcon sx={{mr: '15px', ml: '5px', color: 'secondary.contrastText'}} fontSize='large' />
                     <Typography component="div" sx={{ flexGrow: 1 }}>
-                        <Link href='/' variant="h6" color="secondary.contrastText" underline="none">Трекер работы</Link>
+                        <Link href='https://alice8080.github.io/work_tracker/' variant="h6" color="secondary.contrastText" underline="none">Трекер работы</Link>
                     </Typography>
                     <IconButton sx={{ ml: 1 }} onClick={colorMode.toggleColorMode}>
                         {theme.palette.mode === 'dark' ? <BrightnessMediumSharpIcon sx={{color: 'secondary.contrastText'}} /> : <Brightness2SharpIcon sx={{color: 'secondary.contrastText'}} />}
