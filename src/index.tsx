@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
-import { HashRouter as Router } from "react-router-dom";
+import { HashRouter } from "react-router-dom";
 import store from './store';
 import App from './App';
 
@@ -10,10 +10,10 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <Router>
+    <HashRouter basename='/work_tracker'>
       <Provider store={store}>
         <App />
       </Provider>
-    </Router>
+    </HashRouter>
   </React.StrictMode>
 );
