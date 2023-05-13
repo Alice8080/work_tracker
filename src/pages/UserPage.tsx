@@ -30,7 +30,7 @@ import { NoUser } from "../components/NoUser";
 
 export const UserPage: FC = () => {
     const [getUserInfo,
-        { data: recordsList,
+        { data: recordsListN,
             isLoading,
             isFetching,
             isSuccess,
@@ -38,15 +38,40 @@ export const UserPage: FC = () => {
         }] = useLazyGetUserInfoQuery();
     const theme = useTheme();
     const matches = useMediaQuery(theme.breakpoints.down('sm'));
-    const { formData, getBestResults } = useRecords(recordsList);
     const urlParams = useParams();
     const userId: string | undefined = urlParams.id;
     const [uId, setUID] = useLocalStorage<string | undefined>('uid', undefined);
     const [params, setParams] = useState<Params>({ time: matches ? 'week' : 'all', recordName: '' });
+    // console.log(recordsList),
+ 
+    const recordsList = [{fromDate: '2023-05-08T20:24:54.000Z', toDate: '2023-05-08T20:42:31.000Z', name: 'что-нибубудь'}, 
+    {fromDate: '2023-04-22T17:51:16.000Z', toDate: '2023-04-22T19:02:25.000Z', name: 'Кубик'}, 
+    {fromDate: '2023-04-18T13:53:44.000Z', toDate: '2023-04-18T15:21:56.000Z', name: 'диплом'}, 
+    {fromDate: '2023-04-17T19:48:25.000Z', toDate: '2023-04-17T21:24:39.000Z', name: 'диплом'}, 
+    {fromDate: '2023-04-17T18:58:53.000Z', toDate: '2023-04-17T19:08:12.000Z', name: 'диплом'}, 
+    {fromDate: '2023-04-14T12:15:22.000Z', toDate: '2023-04-14T14:04:56.000Z', name: 'диплом'}, 
+    {fromDate: '2023-04-10T22:29:30.000Z', toDate: '2023-04-10T22:52:34.000Z', name: 'диплом'}, 
+    {fromDate: '2023-04-10T13:12:18.000Z', toDate: '2023-04-10T14:05:59.000Z', name: 'диплом'}, 
+    {fromDate: '2023-04-09T22:43:13.000Z', toDate: '2023-04-09T23:51:17.000Z', name: 'диплом'}, 
+    {fromDate: '2023-04-07T18:27:22.000Z', toDate: '2023-04-07T20:33:27.000Z', name: 'диплом'}, 
+    {fromDate: '2023-04-05T22:49:25.000Z', toDate: '2023-04-05T23:58:44.000Z', name: 'диплом'}, 
+    {fromDate: '2023-04-04T22:10:19.000Z', toDate: '2023-04-04T22:38:15.000Z', name: 'диплом'}, 
+    {fromDate: '2023-04-03T13:53:01.000Z', toDate: '2023-04-03T15:56:00.000Z', name: 'диплом'}, 
+    {fromDate: '2023-04-03T10:29:36.000Z', toDate: '2023-04-03T13:11:50.000Z', name: 'диплом'}, 
+    {fromDate: '2023-02-21T22:17:11.000Z', toDate: '2023-02-21T22:58:58.000Z', name: 'Книга по js'}, 
+    {fromDate: '2023-02-16T22:47:12.000Z', toDate: '2023-02-16T23:28:49.000Z', name: 'Книга по js'}, 
+    {fromDate: '2023-02-15T22:50:56.000Z', toDate: '2023-02-16T00:01:05.000Z', name: 'Книга по js'}, 
+    {fromDate: '2023-02-14T22:25:00.000Z', toDate: '2023-02-14T23:38:57.000Z', name: 'Книга по js'}, 
+    {fromDate: '2023-02-08T23:57:01.000Z', toDate: '2023-02-09T00:37:49.000Z', name: 'Книга по js'}, 
+    {fromDate: '2023-02-07T23:27:31.000Z', toDate: '2023-02-08T00:02:41.000Z', name: 'Книга по js'}, 
+    {fromDate: '2023-02-05T23:12:40.000Z', toDate: '2023-02-06T00:06:50.000Z', name: 'Книга по js'}, 
+    {fromDate: '2023-02-04T23:41:34.000Z', toDate: '2023-02-05T00:18:26.000Z', name: 'Книга по js'}, 
+    {fromDate: '2023-02-03T22:52:07.000Z', toDate: '2023-02-03T23:29:34.000Z', name: 'Книга по js'}]
+    const { formData, getBestResults } = useRecords(recordsList);
 
     useEffect(() => {
         if (userId) {
-            getUserInfo(userId);
+            // getUserInfo(userId);
             if (isSuccess) {
                 setUID(userId);
             }
@@ -102,7 +127,8 @@ export const UserPage: FC = () => {
                     <Error />
                 : isSuccess && !recordsList ?
                     <NoRecords />
-                : isSuccess && recordsList && recordsList.length > 0 ?
+                // : isSuccess && recordsList && recordsList.length > 0 ?
+                : true ?
                     <Box sx={{ flexGrow: 1 }}>
                         <Grid container spacing={{ xs: 2 }} >
                             <Grid item xs={12} lg={9} sx={{ w: 1, h: 1 }}>
