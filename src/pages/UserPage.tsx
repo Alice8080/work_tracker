@@ -17,6 +17,7 @@ import AutoGraphIcon from '@mui/icons-material/AutoGraph';
 import EmojiEventsRoundedIcon from '@mui/icons-material/EmojiEventsRounded';
 import EventAvailableRoundedIcon from '@mui/icons-material/EventAvailableRounded';
 import AccessTimeRoundedIcon from '@mui/icons-material/AccessTimeRounded';
+import TimelapseRoundedIcon from '@mui/icons-material/TimelapseRounded';
 import { useLazyGetUserInfoQuery } from "../api/apiSlice";
 import { ProgressBar } from "../components/ProgressBar";
 import { Error } from "../components/Error";
@@ -160,7 +161,7 @@ export const UserPage: FC = () => {
                                 <Achievement title='Лучший месяц' subtitle={bestMonth.month} item={`За него вы проработали ${bestMonth.hours}`} Icon={EventAvailableRoundedIcon} />
                             </Grid>
                             <Grid item xs={12} lg={4}>
-                                <Achievement title='Общее время работы за последнюю неделю' subtitle={weekHours} item={`Последняя запись сделана ${lastDate}`} Icon={EventAvailableRoundedIcon} />
+                                <Achievement title='Общее время работы за последнюю неделю' subtitle={weekHours} item={`Последняя запись сделана ${lastDate}`} Icon={TimelapseRoundedIcon} />
                             </Grid>
                         </Grid>
                     </Box>

@@ -1,46 +1,23 @@
-# Getting Started with Create React App
+# Трекер работы
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+[https://alice8080.github.io/work_tracker](https://alice8080.github.io/work_tracker/) – визуализация статистики телеграм-бота [Трекер работы](https://t.me/Treker_Raboty_Bot/), предназначенного для отслеживания времени работы. 
 
-## Available Scripts
+[Github разработчика бота](https://github.com/pe5ha)
 
-In the project directory, you can run:
+Это веб-приложение отображает количество записанных в трекер часов для конкретного пользователя в формате гистограммы. Можно сортировать массив данных по временному промежутку (все время, последний месяц или последняя неделя) и по названию дела, которое пользователь указал при записи в бота. Также отображаются день и месяц с наибольшим количеством отработанных часов.
 
-### `npm start`
+Статистика за весь период записей (выбрана темная тема):
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+![Темная тема](/readme_assets/dark-theme.png)
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+Статистика по определенному делу за последний месяц (выбрана светлая тема):
 
-### `npm test`
+![Светлая тема](/readme_assets/light-theme.png)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Стэк:
+- [TypeScript](https://www.typescriptlang.org/)
+- [React](https://react.dev/)
+- [Material UI](https://mui.com/)
+- [Chart.js](https://www.chartjs.org/), [react-chartjs-2](https://react-chartjs-2.js.org/)
+- [React Router](https://reactrouter.com/en/main)
+- [Redux](https://redux.js.org/), [Redux Toolkit Query](https://redux-toolkit.js.org/rtk-query/overview)
