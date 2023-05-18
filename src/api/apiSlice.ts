@@ -13,7 +13,7 @@ export type RecordsList = Record[];
 
 export const apiSlice = createApi({
     reducerPath: 'api',
-    baseQuery: fetchBaseQuery({ baseUrl: `${env.API_URL}` }),
+    baseQuery: fetchBaseQuery({ baseUrl: 'https://script.google.com/macros/s/AKfycbxmJSzytHBLpNFHa-8jWbtGQZFmfq8yD2E8oRXR0y-iC0LsW8bozNzbergrRK55nKiEOA/' }),
     tagTypes: ['Records'],
     endpoints: (builder) => ({
         getUserInfo: builder.query<RecordsList, string>({
