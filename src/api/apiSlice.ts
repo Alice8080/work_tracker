@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import env from "react-dotenv";
 
 export interface Record {
     fromDate: string,
@@ -12,7 +13,7 @@ export type RecordsList = Record[];
 
 export const apiSlice = createApi({
     reducerPath: 'api',
-    baseQuery: fetchBaseQuery({ baseUrl: 'https://script.google.com/macros/s/AKfycbxmJSzytHBLpNFHa-8jWbtGQZFmfq8yD2E8oRXR0y-iC0LsW8bozNzbergrRK55nKiEOA/' }),
+    baseQuery: fetchBaseQuery({ baseUrl: `${env.API_URL}` }),
     tagTypes: ['Records'],
     endpoints: (builder) => ({
         getUserInfo: builder.query<RecordsList, string>({
@@ -35,7 +36,7 @@ export const apiSlice = createApi({
                 }
                 return records;
             },
-            providesTags: ['Records']
+            // providesTags: ['Records']
         }),
     }),
 });

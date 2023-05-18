@@ -64,11 +64,7 @@ const App: FC = () => {
         <Container maxWidth="xl" sx={{ mt: 4 }}>
           <Suspense fallback={<Spinner />}>
             <Routes>
-              <Route path='/' element={<HomePage />} />
-              <Route path='/user/'>
-                <Route index element={<UserPage />} />
-                <Route path=':id' element={<UserPage />} />
-              </Route>
+              <Route path='/' element={<UserPage />} />
               <Route path='*' element={<Page404 />} />
             </Routes>
           </Suspense>

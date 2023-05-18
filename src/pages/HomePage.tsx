@@ -13,9 +13,7 @@ import { Block } from "../components/Block";
 
 export const HomePage: FC = () => {
     const theme = useTheme();
-    const [uId, setUID] = useLocalStorage<string | undefined>('uid', undefined);
     const matches = useMediaQuery(theme.breakpoints.up('sm'));
-
     return (
         <Box
             sx={{
@@ -60,7 +58,7 @@ export const HomePage: FC = () => {
                     }} />
                 </Button>
                 <Button
-                    href={uId ? `/user/${uId}` : '/user'}
+                    href='/user'
                     variant="contained"
                     color="primary"
                     disabled={false}
