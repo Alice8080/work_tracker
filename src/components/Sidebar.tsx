@@ -10,7 +10,6 @@ import ListItemText from '@mui/material/ListItemText';
 import MenuIcon from '@mui/icons-material/Menu';
 import IconButton from '@mui/material/IconButton';
 import GitHubIcon from '@mui/icons-material/GitHub';
-import TelegramIcon from '@mui/icons-material/Telegram';
 import Link from '@mui/material/Link';
 import TimerSharpIcon from '@mui/icons-material/TimerSharp';
 
@@ -53,7 +52,6 @@ export const Sidebar: FC = () => {
           <List>
             {[
               { 'text': 'Бот', 'href': 'https://t.me/Treker_Raboty_Bot', 'icon': <TimerSharpIcon /> },
-              { 'text': 'Чат проекта', 'href': '#', 'icon': <TelegramIcon /> },
               { 'text': 'Github разработчика бота', 'href': 'https://github.com/pe5ha', 'icon': <GitHubIcon /> },
               { 'text': 'Github этого приложения', 'href': 'https://github.com/Alice8080/work_tracker', 'icon': <GitHubIcon /> },
             ].map((item, index) => {

@@ -46,8 +46,8 @@ export const BarChart = ({ recordsList, labels, data, name }: Props) => {
                 boxPadding: 0,
                 callbacks: {
                     label: function (context) {
-                        const label = getNameByDate(context.label, name).replace(/\n/g, '');
-                        let lines = []; 
+                        const label: string = getNameByDate(context.label, name).replace(/\n/g, '');
+                        let lines: string[] = []; 
                         let startLine = 0;
                         let endLine = maxStringLength;
                         let counter = 1;

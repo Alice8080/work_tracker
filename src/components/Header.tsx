@@ -22,7 +22,7 @@ import { useLocalStorage } from '../hooks/useLocalStorage';
 const settings = ['Выйти из профиля'];
 
 export const Header: FC = () => {
-    const [user, setUser] = useLocalStorage<string | undefined>('user','');
+    const [user, setUser] = useLocalStorage<any | undefined>('user', '');
     const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
     const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -49,11 +49,11 @@ export const Header: FC = () => {
                     <Typography component="div" sx={{ flexGrow: 1 }}>
                         <Link href='https://alice8080.github.io/work_tracker/' variant="h6" color="secondary.contrastText" underline="none">Трекер работы</Link>
                     </Typography>
-                    {user && user.length > 0 ? 
+                    {user ? 
                     <Box sx={{ flexGrow: 0 }}>
                         <Tooltip title="Ваш профиль">
                             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                                <Avatar alt="Аватар" src={JSON.parse(user).photo_url} />
+                                <Avatar alt="Аватар" src={JSON.parse(JSON.stringify(user)).photo_url} />
                             </IconButton>
                         </Tooltip>
                         <Menu

@@ -52,16 +52,16 @@ export const UserPage: FC = () => {
         }] = useLazyGetUserInfoQuery();
     const theme = useTheme();
     const matches = useMediaQuery(theme.breakpoints.down('sm'));
-    const [user, setUser] = useLocalStorage<undefined | string>('user', '');
+    const [user, setUser] = useLocalStorage<undefined | any>('user', '');
     const [params, setParams] = useState<Params>({ time: matches ? 'week' : 'all', recordName: '' });
     const { formData, getBestResults } = useRecords(recordsList);
 
     useEffect(() => {
-        if (user && user.length > 0) {
-            const userId = JSON.parse(user);
+        if (user) {
+            const userId = JSON.parse(JSON.stringify(user)).id;
             getUserInfo(`${userId}`);
         }
-    }, [user]);
+    }, []);
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
         setParams((params: Params) => ({ ...params, recordName: event.target.value as string | undefined }))
